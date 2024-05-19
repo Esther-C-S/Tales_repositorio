@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+      <!-- Primera Columna -->
+      <div class="col-6 col-md-3 p-5 d-flex flex-column">
+        <div class="custom-rounded p-5 my-3 flex-fill secciones">
+          SOCIAL
+        </div>
+        <div class="custom-rounded p-5 my-3 flex-fill secciones">
+          LIBROS AÑO
+        </div>
+      </div>
+  
+      <!-- Segunda Columna -->
+      <div class="col-12 col-md-6 p-5 d-flex align-items-center">
+        <div class="custom-rounded p-5 w-100 secciones">
+          ESTAS LEYENDO
+        </div>
+      </div>
+  
+      <!-- Tercera Columna -->
+      <div class="col-6 col-md-3 p-5">
+        <div class="custom-rounded my-3 p-5 secciones">
+          ESTADISTICAS
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+{% endblock %}

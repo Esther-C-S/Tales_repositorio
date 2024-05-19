@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css?family=Playfair%20Display:700|Playfair%20Display:400');
+
+/*-------------------------------
+
+    RESETEO DE PROPIEDADES DEL CSS
+
+-------------------------------*/
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*-------------------------------
+
+    ELEMENTOS DEL BODY
+
+-------------------------------*/
+body {
+  font-family: 'Playfair Display'!important;
+  font-weight: 400;
+  background-color: #638889 !important;
+  color: #F9EFDB !important;
+}
+
+.logo{
+    height: 100%;
+    width: 100%;
+}
+
+.container{
+    margin-top: 15%;
+}
+
+.texto-principal{
+    font-size: 96px;
+}
+
+.texto-secundario{
+    font-size: 32px;
+}
+
+.boton-login{
+    background-color: #F9EFDB;
+    color: #638889;
+    padding-left: 30%;
+    padding-right: 30%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    font-size: 2.369rem;
+}
+
+.link{
+    text-decoration: none;
+    color: #638889;
+    
+}
+.link:hover{
+    text-decoration: none;
+}

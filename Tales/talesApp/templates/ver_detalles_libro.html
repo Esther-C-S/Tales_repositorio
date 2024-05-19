@@ -1,0 +1,85 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+{% block content %}
+    
+<div class="container-fluid">
+    <div class="m-5 px-5 row">
+        <div class="col-3">
+            <div class="row">
+                <img id="portada" src="{{ libro.portada.url }}" alt="Portada de {{ libro.titulo }}" style="width: 70%;">
+            </div>
+            <div class="row my-4">
+                <div class="dropdown">
+                    <button id="dropdownBtn" class="dropbtn" onclick="toggleDropdown()">Lo quiero leer</button>
+                    <div id="dropdownContent" class="dropdown-content">
+                        <a href="#" onclick="setStatus('q')">Lo quiero leer</a>
+                        <a href="#" onclick="setStatus('ly')">Leyendo</a>
+                        <a href="#" onclick="setStatus('l')">Leído</a>
+                        <a href="#" onclick="setStatus('a')">Abandonado</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+        </div>
+        <div class="col-9">
+
+            <div class="row  px-5">
+                <h1><strong>{{ libro.titulo }}</strong> </h1><br>
+            </div>
+            <div class="row  px-5">
+                
+
+                {% if id_saga and libro.id_saga %}
+                    {% for saga in libro.id_saga.all%}
+                        {{ saga.nombre}} {{libro.n_saga}}
+                    {% endfor %}
+                {% endif %}
+
+                <h3>
+                    {% for autor in libro.id_autor.all %}
+                    {{ autor.nombre_autor }} {{ autor.apellido_autor }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </h3>
+
+            </div>
+            <hr class="separador_detalles_libro">
+            <div class="row  px-5">
+                DATOS, SINOPSIS ETC
+            </div>
+            <div class="row  px-5">
+                RESEÑAS
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="row">
+    <div class="col">
+        
+
+    <div class="col">
+        
+    </div>
+    </div>
+
+
+    <div class="row">
+
+    </div>
+    <div class="row">
+
+    </div>
+</div> -->
+
+    <script src="{% static 'js/script_detalles_libro.js' %}"></script>
+
+
+{% endblock %}

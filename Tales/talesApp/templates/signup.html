@@ -1,0 +1,136 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio | Tales</title>
+    <link rel="shortcut icon" href="{% static 'img/img_corporativas/icono_pestaña.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+
+    <!-- Font awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Enlace a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+
+<div class="container d-flex justify-content-center">
+    <div class="caja col-8">
+        <form action="{% url 'register_user' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="row justify-content-center mb-4">
+                <img src="{% static 'img/img_corporativas/logo-beige.png' %}" alt="Logo" style="max-width: 150px;">
+            </div>
+
+            <div class="row justify-content-center mb-3">
+                <div class="form-group col-12">
+                    {{ form.username}}
+                    {% if form.username.errors %}
+                        <div class="error">{{ form.username.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col px-2">
+                    <div class="form-group">
+                        {{ form.first_name}}
+                        {% if form.first_name.errors %}
+                            <div class="error">{{ form.first_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col px-2">
+                    <div class="form-group">
+                        {{ form.last_name}}
+                        {% if form.last_name.errors %}
+                            <div class="error">{{ form.last_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col px-2">
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}">Correo electrónico:</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="error">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col px-2">
+                    <div class="form-group">
+                        <label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de nacimiento:</label>
+                        <div class="input-group">
+                            {{ form.fecha_nacimiento }}
+                        </div>
+                        {% if form.fecha_nacimiento.errors %}
+                            <div class="error">{{ form.fecha_nacimiento.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center mb-3">
+                <div class="form-group col-12">
+                    {{ form.biografia}}
+                    {% if form.biografia.errors %}
+                        <div class="error">{{ form.biografia.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row justify-content-center mb-3">
+                <div class="form-group col-12">
+                    <label for="{{ form.foto_perfil.id_for_label }}">Foto de perfil:</label>
+                    {{ form.foto_perfil}}
+                    {% if form.foto_perfil.errors %}
+                        <div class="error">{{ form.foto_perfil.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col px-2">
+                    <div class="form-group">
+                        {{ form.password1}}
+                        {% if form.password1.errors %}
+                            <div class="error">{{ form.password1.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col px-2">
+                    <div class="form-group">
+                        {{ form.password2}}
+                        {% if form.password2.errors %}
+                            <div class="error">{{ form.password2.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <input type="submit" value="Enviar" class="button">
+            </div>
+        </form>
+    </div>
+</div>
+
+    
+
+    
+    
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio | Tales</title>
+    <link rel="shortcut icon" href="{% static 'img/img_corporativas/icono_pestaña.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    <!-- Font awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Enlace a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="quote" id="quote">
+            <div class="col-8">
+                <div class="row logo">
+                    <img src="{% static 'img/img_corporativas/logo-beige.png' %}" class="logo">
+                </div>
+                <div class="cita">
+                    <div class="row texto">
+                        <p>{{frase.contenido}}</p>
+                    </div>
+                    <div class="row autor">
+                        <div class="col-auto ml-auto autor">
+                            <p>- {{ frase.id_autor.nombre_autor}} {{frase.id_autor.apellido_autor}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="login-form caja" id="loginForm">
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                <img src="{% static 'img/img_corporativas/logo_navbar.png' %}" style="max-width: 150px;">
+
+                <div class="input-box">
+                    {{ form.username }}
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    {{ form.password }}
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+
+                <button type="submit" class="button">Login</button>
+                <input type="hidden" name="next" value="{{next}}">
+
+                <div class="registrar">
+                    <p>¿No tienes cuenta?
+                    <a href="{% url 'register_user' %}">Registrarse</a></p>
+                </div>
+
+            </form>
+        </div>
+        <button class="toggle-btn" id="toggleBtn">
+            <img src="{% static 'svg/arrow-down.svg' %}">
+        </button>
+    </div>
+
+    <script src="{% static 'js/script_login.js' %}"></script>
+
+
+
+
+
+
+</body>
+</html>

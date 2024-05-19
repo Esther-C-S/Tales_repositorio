@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400;800&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Playfair%20Display:700|Playfair%20Display:400');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Gabarito', sans-serif;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #9DBC98, #638889, #113946);
+}
+
+.caja{
+    background-color: transparent;
+    color: #F9EFDB;
+    border-radius: 10px;
+    padding: 30px 40px;
+    border: 2px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(20px) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+}
+
+label{
+    font-family: 'Playfair Display';
+}
+
+.caja .button{
+    font-family: 'Playfair Display';
+    width: 70%;
+    height: 45px;
+    background: #638889;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 40px;
+    font-size: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    color: #fff;
+    font-weight: 600;
+}
+
+::placeholder{
+    color: #638889;
+}

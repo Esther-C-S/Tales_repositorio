@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+{% block content %}
+    
+<div class="container-fluid h-100 d-flex flex-column">
+    <div class="row flex-grow-1 p-5">
+        <div class="col-md-9">
+            <div class="row h-100">
+                <div class="col-md-3">
+                    <img src="{{ usuario.foto_perfil.url}}" class="rounded-circle foto_perfil_usuario"  alt="Avatar" />
+                </div>
+                <div class="col-md-3">
+                    <h1><strong>{{usuario.nombre_usuario}}</strong></h1>
+                    <p>{{usuario.biografia}}</p>
+                </div>
+            </div>
+            <div class="row h-100">
+                <hr class="separador">
+                <div class="col">
+                    <h2>Tus libros favoritos</h2>
+                </div>
+            </div>
+            <div class="row h-100">
+                <hr class="separador">
+                <div class="col">
+                    <h3>Estas leyendo...</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row h-50">
+                <div class="col">
+                    ESTADISTICAS
+                </div>
+            </div>
+            <div class="row h-50">
+                <div class="col">
+                    LIBROS AÑO
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

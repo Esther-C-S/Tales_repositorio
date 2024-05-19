@@ -16,12 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls.static import static
+from django.conf import settings
 from django.views.generic import RedirectView
+from django.contrib.auth.views import LoginView, LogoutView
 
 from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tales/', include('talesApp.urls')),
-    path('', RedirectView.as_view(url='tales/', permanent=True))
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('', RedirectView.as_view(url='tales/', permanent=True)),
+    path('accounts/', include('django.contrib.auth.urls')),
+    # path('accounts/login/', LoginView.as_view(), name='login'),
+    # path('accounts/logged_out/', LogoutView.as_view(), name='logout')
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
+
+# urlpatterns += settings.MEDIA_URL
