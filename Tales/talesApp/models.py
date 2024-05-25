@@ -1,8 +1,9 @@
-import os
+import os, uuid
 from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
 
 
 #modelo de la clase de Libro
@@ -123,9 +124,13 @@ class Libreria (models.Model):
 
 #modelo de la clase Estado_libro -> clase intermedia entre Usuario y Libro
 class Estado_libro(models.Model):
-    id_estado_libro = models.UUIDField(primary_key=True)
+    id_estado_libro = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     id_libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+    paginas_leidas = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    fecha_leyendo = models.DateTimeField(null=True, blank=True)
+    fecha_leido = models.DateTimeField(null=True, blank=True)
+
 
     ESTADOS = (
         ('n', 'Nada'),
@@ -136,3 +141,17 @@ class Estado_libro(models.Model):
     )
 
     estado = models.CharField(max_length=2, choices=ESTADOS, default='n')
+
+    def save(self, *args, **kwargs):
+        if self.estado == 'n':
+            self.paginas_leidas = 0
+        elif self.estado == 'l':
+            self.paginas_leidas = self.id_libro.n_paginas
+            self.fecha_leido = timezone.now()
+        elif self.estado == 'ly':
+            if not self.fecha_leyendo:
+                self.fecha_leyendo = timezone.now()
+        super(Estado_libro, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.id_libro.titulo} - {self.get_estado_display()}"

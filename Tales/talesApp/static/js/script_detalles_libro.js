@@ -9,12 +9,11 @@ function toggleDropdown() {
 }
 
 function setStatus(status) {
-    const libroId = "{{ libro.id }}";
     $.ajax({
-        url: "{% url 'actualizar_estado_libro' %}",
+        url: actualizarEstadoLibroUrl,
         type: "POST",
         data: {
-            libro_id: libroId,
+            id_libro: libroId,
             estado: status,
             csrfmiddlewaretoken: '{{ csrf_token }}'
         },
@@ -44,7 +43,6 @@ window.onclick = function(event) {
         }
     }
 }
-
 
 
 

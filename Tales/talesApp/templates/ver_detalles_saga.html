@@ -9,29 +9,32 @@
 <div class="container busqueda">
     <div class="row">
         <div class="col-12 col-md-12 pt-5 d-flex justify-content-center">
-            {% if search %}
-                <div class="row">
-                    <p> Resultados de busqueda para: <strong>{{search}}</strong></p>
+                <div class="row d-flex align-items-end">
+                    <h1>{{saga.nombre}} -</h1>
+                    {% for autor in saga.id_autor.all %}
+                        <h3 class="autores"><a href="{% url 'ver_detalles_autor' autor.id_autor %}"> {{autor.nombre_autor}} {{autor.apellido_autor}}</a></h3>
+                    {% endfor %}
                 </div>
-            {% endif %}
         </div>
     </div>
     <div class="row justify-content-start px-5 w-100">
         <div class="col-12 justify-content-center w-100 no-margin">
-            {% if resultados %}
-                {% for resultado in resultados %}
+                {% for libro in libros %}
                     <div class="resultado">
                         <hr class="separador">
                         <div class="row">
-                            <div class="col-3 d-flex justify-content-center align-items-center">
-                                <img src="{{ resultado.portada.url }}" alt="Portada de {{ resultado.titulo }}" style="width: 100px;">
+                            <div class="col-1 d-flex align-items-center justify-content-end pl-2">
+                                <h2>{{libro.n_saga}}</h2>
                             </div>
-                            <div class="col-9">
-                                <p class="titulo">{{ resultado.titulo }}</p>
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <img src="{{ libro.portada.url }}" alt="Portada de {{ resultado.titulo }}" style="width: 100px;">
+                            </div>
+                            <div class="col-8">
+                                <p class="titulo">{{ libro.titulo }}</p>
                                 <p>
                                     <span class="autores">
                                         de 
-                                        {% for autor in resultado.id_autor.all %}
+                                        {% for autor in libro.id_autor.all %}
                                             <a href="{% url 'ver_detalles_autor' autor.id_autor %}">
                                             {{ autor.nombre_autor }} 
                                             {% if autor.apellido_autor %}
@@ -40,24 +43,17 @@
                                             {% if not forloop.last %}, {% endif %}
                                         {% endfor %}
                                     </span>
-                                    , &nbsp;{{ resultado.n_paginas }} páginas
+                                    , &nbsp;{{ libro.n_paginas }} páginas
                                 </p>
-                                    
-
-                                <a href="{% url 'ver_detalles_libro' resultado.id_libro %}"><button class="py-2 my-2 ver_detalles_libro">Ver detalles</button></a>
+                                <a href="{% url 'ver_detalles_libro' libro.id_libro %}"><button class="py-2 my-2 ver_detalles_libro">Ver detalles</button></a>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
-            {% else %}
-                <hr class="separador">
-                <h2 style="text-align: center;">No se encontraron resultados</h2>
-            {% endif %}
         </div>
     </div>
 </div>
 
-    
 <script>
 
     document.addEventListener("DOMContentLoaded", function() {

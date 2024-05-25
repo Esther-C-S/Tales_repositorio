@@ -45,28 +45,32 @@ class FraseAdmin(admin.ModelAdmin):
 # admin.site.register(Saga)
 @admin.register(Saga)
 class SagaAdmin(admin.ModelAdmin):
-    list_display = ('id_saga', 'nombre', 'nombre_autores' ,'n_libros')
+    list_display = ('id_saga', 'nombre', 'nombre_autores', 'n_libros')
     ordering = ('id_autor__apellido_autor',)
 
     def nombre_autores(self, obj):
         return ', '.join([f"{autor.nombre_autor} {autor.apellido_autor}" for autor in obj.id_autor.all()])
-    nombre_autores.short_description = 'Autores' 
+    nombre_autores.short_description = 'Autores'
 
 
 
 # admin.site.register(Libro)
 @admin.register(Libro)
 class LibroAdmin(admin.ModelAdmin):
-    list_display = ('id_libro', 'titulo', 'nombre_autores', 'id_saga')
+    list_display = ('id_libro', 'titulo', 'nombre_autores', 'mostrar_sagas')
     ordering = ('id_libro',)
 
     def nombre_autores(self, obj):
         return ', '.join([f"{autor.nombre_autor} {autor.apellido_autor}" for autor in obj.id_autor.all()])
-    nombre_autores.short_description = 'Autores' 
+    nombre_autores.short_description = 'Autores'
 
-    def id_saga(self, obj):
+    def mostrar_sagas(self, obj):
         return ', '.join([saga.nombre for saga in obj.id_saga.all()])
-    id_saga.short_description = 'Nombre de la saga'
+    mostrar_sagas.short_description = 'Nombre de la saga'
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        form.save_m2m()
 
 
 

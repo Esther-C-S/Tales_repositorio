@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh; margin-top: -56px; padding-top: 56px;">
+    <div class="text-center">
+        <div class="row py-5">
+            <div class="col py-5">
+                <div class="main-container center">
+                    <!-- progress indicator -->
+                    <div class="circle-container center">
+                        <div class="semicircle"></div>
+                        <div class="semicircle"></div>
+                        <div class="semicircle"></div>
+                        <div class="outermost-circle"></div>
+                    </div>
+                    <!-- timer -->
+                    <div class="timer-container center">
+                        <div class="timer center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row py-5">
+            <div class="col">
+                <div class="row">
+                    <div class="col d-flex justify-content-center">
+                        <button class="mt-2 boton-actualizar"><i class="bi bi-play-fill"></i></button>
+                    </div>
+                    <div class="col d-flex justify-content-center">
+                        <button class="mt-2 boton-actualizar"><i class="bi bi-pause"></i></button>
+                    </div>
+                    <div class="col d-flex justify-content-center">
+                        <button class="mt-2 boton-actualizar"><i class="bi bi-square-fill"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/leyendo.js' %}"></script>
+{% endblock %}

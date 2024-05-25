@@ -24,7 +24,12 @@ html,body{
 
 body {
   font-family: 'Playfair Display';
-  font-weight: 400;
+  font-weight: 600;
+}
+
+hr{
+    border: 2px solid #638889 !important; 
+    opacity: 1 !important;
 }
 
 
@@ -96,32 +101,31 @@ small {
 
 -------------------------------*/
 
-.menu{
-    background-color: #F9EFDB;
+.menu {
+    background-color: #F9EFDB !important;
     border-bottom-left-radius: 50px; 
     border-bottom-right-radius: 50px;
     border-bottom: 4px solid #638889;
     border-left: 4px solid #638889;
-    border-right: 4px solid #638889;;
+    border-right: 4px solid #638889;
+    position: relative; 
 }
 
-.barra-busqueda{
+.barra-busqueda {
     border-bottom: 2px solid #638889;
+    width: 100%; 
+    max-width: 400px; 
 }
 
-.barra-busqueda::-webkit-search-cancel-button {
-    color: #638889; /* Cambia el color de la "x" */
-}
-
-.custom-color{
+.custom-color {
     background-color: #638889;
 }
 
-.bi-search{
+.bi-search {
     color: #638889;
 }
 
-.iconos-menu{
+.iconos-menu {
     color: #638889 !important;
     font-size: 2rem !important;
 }
@@ -130,6 +134,7 @@ small {
     background-color: #638889;
     color: #fff;
 }
+
 
 /*-------------------------------
 
@@ -145,7 +150,74 @@ small {
     background-color: #F9EFDB !important;
 }
 
+.carousel-inner {
+    width: 100%;
+}
 
+.carousel-item img {
+    margin: 0 auto;
+}
+
+.portada_index{
+    max-width: 200px;
+}
+
+.progress{
+    height: 20px;
+}
+
+.boton-actualizar, .boton-leer{
+    width: 100%;
+    height: 150%;
+    background: #638889;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    color: #fff;
+    font-weight: 600;
+}
+
+.separador_libros_leyendo{
+    border: 2px solid #638889;
+    width: 120%;
+}
+
+.enlace_index a,
+.enlace_index a:link,
+.enlace_index a:visited {
+    color: inherit;         
+    outline: none;   
+    text-decoration: none;
+}
+
+.enlace_index a:hover, 
+.enlace_index a:active, 
+.enlace_index a:focus {
+    text-decoration: underline;  
+    color: inherit;         
+    outline: none;          
+}
+
+/* Custom styles for the carousel */
+.carousel-item {
+    background-color: transparent;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(100%);
+}
+.carousel {
+    background-color: transparent;
+}
+.carousel-control-prev,
+.carousel-control-next {
+    transition: none; /* Elimina la transición para una respuesta más rápida */
+    outline: none;    /* Elimina el borde del enfoque */
+    background-color: transparent; /* Quita el fondo */
+}
 
 /*-------------------------------
 
@@ -175,21 +247,20 @@ small {
 }
 
 .resultado {
-    margin-bottom: 20px; /* Espaciado entre resultados */
+    margin-bottom: 20px; 
 }
 
 .titulo {
-    font-size: 18px; /* Tamaño del título */
-    font-weight: bold; /* Estilo del título */
+    font-size: 18px;
+    font-weight: bold; 
 }
 
 .autores {
-    margin-top: 5px; /* Espaciado entre el título y los autores */
-    font-style: italic; /* Estilo de los autores */
+    font-style: italic;
 }
 
 .separador{
-    border: 2px solid #638889;
+    border: 2px solid #638889 !important;
 }
 
 
@@ -204,7 +275,9 @@ small {
     height: auto;
 }
 
-
+.separador_perfil_usuario{
+    border: 2px solid #638889;
+}
 
 /*-------------------------------
 
@@ -228,7 +301,7 @@ small {
 }
 
 .dropbtn:after {
-    content: ' \25BC'; /* Unicode for down arrow */
+    content: ' \25BC';
     font-size: 0.6em;
     margin-left: 10px;
 }
@@ -260,6 +333,151 @@ small {
     display: block;
 }
 
-.separador_detalles_libro{
+.sagas a, .autores a {
+    text-decoration: none;  
+    color: inherit;         
+}
+
+.sagas a:hover, a:active, a:focus , .autores a:hover, a:active, a:focus {
+    text-decoration: underline;  
+    color: inherit;         
+    outline: none;          
+}
+
+
+
+/*-------------------------------
+
+    DETALLES AUTOR
+
+-------------------------------*/
+
+.separador_detalles_autor{
     border: 2px solid #638889;
+}
+
+.detalles_autor h5{
+    font-size:  1.5rem; 
+}
+
+.detalles_autor p{
+    text-align: justify;
+}
+
+.fila_libros_autor{
+    height: 30vh;
+}
+
+.fila_libro_autor .col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.fila_libro_autor img {
+    max-height: 100%;
+    object-fit: cover; /* Opcional: Para mantener el aspecto de las imágenes */
+}
+
+/*-------------------------------
+
+    TIMER
+
+-------------------------------*/
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* progress indicator */
+
+.circle-container{
+    width: 400px;
+    height: 400px;
+    background-color: #EBD9B4;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 1;
+    overflow: hidden;
+    box-shadow: 0px 0px 50px rgb(157, 188, 152, 1);
+}
+
+.semicircle{
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: right center;
+}
+
+.semicircle:nth-child(1){
+    background-color: rgb(99, 136, 137);
+    z-index: 2;
+}
+
+.semicircle:nth-child(2){
+    background-color: rgb(99, 136, 137);
+    z-index: 3;
+}
+
+.semicircle:nth-child(3){
+    background-color: #EBD9B4;
+    z-index: 4;
+}
+
+.outermost-circle{
+    width: 390px;
+    height: 390px;
+    background-color: #F9EFDB;
+    border-radius: 50%;
+    z-index: 5;
+}
+
+/* timer */
+
+.timer-container{
+    width: 330px;
+    height: 200px;
+    z-index: 6;
+}
+
+.timer{
+    width: 400px;
+    height: 100px;
+    z-index: 7;
+    font-family: 'Playfair Display';
+    color: #638889;
+}
+
+.timer div{
+    font-size: 70px;
+    font-weight: 100;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px 0 10px;
+}
+
+.timer .colon{
+    background-color: transparent;
+    width: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    padding-bottom: 15px;
+}
+
+/* buttons */
+
+.button-container{
+    margin-top: 50px;
+    z-index: 8;
+}
+
+.button-container .btn{
+    margin: 0 10px;
+    font-size: 30px;
 }

@@ -5,34 +5,179 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Primera Columna -->
+            <div class="col-6 col-md-3 p-5 d-flex flex-column">
+                <div class="custom-rounded p-5 my-3 flex-fill secciones">
+                    SOCIAL
+                </div>
+                <div class="custom-rounded p-5 my-3 flex-fill secciones">
+                    LIBROS AÑO
+                </div>
+            </div>
 
-<div class="container-fluid">
-    <div class="row">
-      <!-- Primera Columna -->
-      <div class="col-6 col-md-3 p-5 d-flex flex-column">
-        <div class="custom-rounded p-5 my-3 flex-fill secciones">
-          SOCIAL
+            <!-- Segunda Columna -->
+            <div class="col-12 col-md-6 py-5 d-flex flex-column align-items-center">
+                <div class="custom-rounded py-5 w-100 secciones">
+                    <div class="container-fluid d-flex flex-column align-items-center">
+                        {% if libros_y_porcentajes %}
+                            <div id="carouselExampleControls" class="carousel slide mb-4" data-bs-interval="false">
+                                <div class="carousel-inner">
+                                    {% for libro, porcentaje in libros_y_porcentajes %}
+                                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                        <div class="row justify-content-center">
+                                            <div class="col-12 p-5 d-flex align-items-center justify-content-center">
+                                                <div class="w-100">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+                                                            <img src="{{ libro.id_libro.portada.url }}" alt="Portada de {{ libro.id_libro.titulo }}" class="img-fluid" style="max-width: 70%;">
+                                                        </div>
+                                                        <div class="col-12 col-md-6 d-flex flex-column justify-content-center">
+                                                            <h5>Leyendo...</h5>
+                                                            <h1 class="enlace_index"><a href="{% url 'ver_detalles_libro' libro.id_libro.id_libro %}">{{ libro.id_libro.titulo }}</a></h1>
+                                                            <p class="lead enlace_index">
+                                                                {% for autor in libro.id_libro.id_autor.all %}
+                                                                    <a href="{% url 'ver_detalles_autor' autor.id_autor %}" class="enlace_index">{{ autor.nombre_autor }} {{ autor.apellido_autor }}</a>{% if not forloop.last %}, {% endif %}
+                                                                {% endfor %}
+                                                                - {{ libro.id_libro.fecha_publicacion }}
+                                                            </p>
+                                                            <div class="progress m-3" style="width: 100%;">
+                                                                <div class="progress-bar" role="progressbar" style="width: {{ porcentaje }}%;" aria-valuenow="{{ porcentaje }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col text-center">
+                                                                    <p class="lead">{{ libro.paginas_leidas }} / {{ libro.id_libro.n_paginas }} - {{ porcentaje|floatformat:2 }}%</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col d-flex justify-content-center">
+                                                                    <button class="mt-2 boton-actualizar" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id-estado-libro="{{ libro.id_estado_libro }}" data-max-paginas="{{ libro.id_libro.n_paginas }}" data-paginas-leidas="{{ libro.paginas_leidas }}">Actualizar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <button class="carousel-control-prev border-0" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev" style="background-color: transparent;">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden"></span>
+                                </button>
+                                <button class="carousel-control-next border-0" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" style="background-color: transparent;">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden"></span>
+                                </button>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info text-center" role="alert">
+                                No tienes libros en lectura actualmente.
+                            </div>
+                        {% endif %}
+                        <div class="row w-100">
+                            <div class="col-12 d-flex justify-content-center">
+                                <a href="{% url 'leyendo' %}" style="width: 70%;"><button class="boton-leer">¿Vas a leer?</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tercera Columna -->
+            <div class="col-6 col-md-3 p-5">
+                <div class="custom-rounded my-3 p-5 secciones">
+                    ESTADISTICAS
+                </div>
+            </div>
         </div>
-        <div class="custom-rounded p-5 my-3 flex-fill secciones">
-          LIBROS AÑO
-        </div>
-      </div>
-  
-      <!-- Segunda Columna -->
-      <div class="col-12 col-md-6 p-5 d-flex align-items-center">
-        <div class="custom-rounded p-5 w-100 secciones">
-          ESTAS LEYENDO
-        </div>
-      </div>
-  
-      <!-- Tercera Columna -->
-      <div class="col-6 col-md-3 p-5">
-        <div class="custom-rounded my-3 p-5 secciones">
-          ESTADISTICAS
-        </div>
-      </div>
     </div>
-  </div>
-  
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">¿Por qué página vas?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="modal-body">
+                    <input type="number" class="form-control" placeholder="Número de página" min="1" id="pageNumberInput">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">¿Has acabado el libro?</button>
+                    <button type="button" class="btn btn-primary" id="saveChangesBtn">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pageNumberInput = document.getElementById('pageNumberInput');
+            const saveChangesBtn = document.getElementById('saveChangesBtn');
+            let currentEstadoLibroId = null;
+            let maxPaginas = 0;
+            let paginasLeidas = 0;
+
+            // Permite solo números en el input
+            pageNumberInput.addEventListener('keypress', function(event) {
+                if (!/^\d*$/.test(event.key)) {
+                    event.preventDefault();
+                }
+            });
+
+            // Controla que no se pueda pegar nada
+            pageNumberInput.addEventListener('paste', function(event) {
+                const pasteData = event.clipboardData.getData('text');
+                if (!/^\d*$/.test(pasteData)) {
+                    event.preventDefault();
+                }
+            });
+
+            // Captura el estado_libro que vamos a actualizar
+            document.querySelectorAll('.boton-actualizar').forEach(button => {
+                button.addEventListener('click', function() {
+                    currentEstadoLibroId = this.getAttribute('data-id-estado-libro');
+                    maxPaginas = parseInt(this.getAttribute('data-max-paginas'), 10);
+                    paginasLeidas = parseInt(this.getAttribute('data-paginas-leidas'), 10);
+                    pageNumberInput.setAttribute('max', maxPaginas);
+                    pageNumberInput.setAttribute('placeholder', `${paginasLeidas} / ${maxPaginas}`);
+                });
+            });
+
+            // Guarda los cambios en el servidor
+            saveChangesBtn.addEventListener('click', function() {
+                const pageNumber = pageNumberInput.value;
+                if (pageNumber && currentEstadoLibroId) {
+                    if (pageNumber > maxPaginas) {
+                        alert(`El número de páginas no puede ser mayor que ${maxPaginas}.`);
+                        return;
+                    }
+                    $.ajax({
+                        url: "{% url 'actualizar_paginas' %}",
+                        type: "POST",
+                        data: {
+                            id_estado_libro: currentEstadoLibroId,
+                            paginas_leidas: pageNumber,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                location.reload(); // Recargar la página para mostrar los cambios
+                            } else {
+                                console.error("Error", response.error);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 
 {% endblock %}

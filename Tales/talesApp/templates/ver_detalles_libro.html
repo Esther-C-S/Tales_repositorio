@@ -9,51 +9,107 @@
 {% block content %}
     
 <div class="container-fluid">
-    <div class="m-5 px-5 row">
-        <div class="col-3">
-            <div class="row">
-                <img id="portada" src="{{ libro.portada.url }}" alt="Portada de {{ libro.titulo }}" style="width: 70%;">
+    <div class="mt-5 p-3 row justify-content-center">
+        <div class="col-3 text-center">
+            <div class="row d-flex justify-content-center">
+                <img id="portada" src="{{ libro.portada.url }}" alt="Portada de {{ libro.titulo }}" style="width: 50%;">
             </div>
-            <div class="row my-4">
+            <div class="row my-4 justify-content-center">
                 <div class="dropdown">
-                    <button id="dropdownBtn" class="dropbtn" onclick="toggleDropdown()">Lo quiero leer</button>
+                    <button id="dropdownBtn" class="dropbtn" onclick="toggleDropdown()">
+                        {{ estado_actual|default:"¿Te interesa el libro?"|capfirst }}
+                    </button>
                     <div id="dropdownContent" class="dropdown-content">
                         <a href="#" onclick="setStatus('q')">Lo quiero leer</a>
-                        <a href="#" onclick="setStatus('ly')">Leyendo</a>
-                        <a href="#" onclick="setStatus('l')">Leído</a>
-                        <a href="#" onclick="setStatus('a')">Abandonado</a>
+                        <a href="#" onclick="setStatus('ly')">Lo estoy leyendo</a>
+                        <a href="#" onclick="setStatus('l')">Lo he leído</a>
+                        <a href="#" onclick="setStatus('a')">Lo he abandonado</a>
                     </div>
                 </div>
             </div>
-            <div class="row">
-
+            <div class="row my-4">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                {% if estado_libro.fecha_leyendo %}
+                    <div class="col-12">
+                        <h5>Leyendo desde el:</h5>
+                    </div>
+                    <div class="col-12">
+                        <h5>{{ estado_libro.fecha_leyendo|date:"d/m/Y H:i" }}</h5>
+                    </div>
+                {% endif %}
+                {% if estado_libro.fecha_leido %}
+                    <div class="col-12">
+                        <h5>Hasta el: </h5>
+                    </div>
+                    <div class="col-12">
+                        <h5>{{ estado_libro.fecha_leido|date:"d/m/Y H:i" }}</h5>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-9">
 
             <div class="row  px-5">
-                <h1><strong>{{ libro.titulo }}</strong> </h1><br>
+                <h1 style="font-size: 5rem;"><strong>{{ libro.titulo }}</strong> </h1><br>
             </div>
-            <div class="row  px-5">
-                
-
-                {% if id_saga and libro.id_saga %}
-                    {% for saga in libro.id_saga.all%}
-                        {{ saga.nombre}} {{libro.n_saga}}
-                    {% endfor %}
-                {% endif %}
-
-                <h3>
-                    {% for autor in libro.id_autor.all %}
-                    {{ autor.nombre_autor }} {{ autor.apellido_autor }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                </h3>
-
+            <div class="row px-5">
+                <div class="d-flex flex-wrap align-items-center">
+                    <h3 class="sagas">
+                        {% if libro.id_saga.exists %}
+                            {% for saga in libro.id_saga.all %}
+                               (<a href="{% url 'ver_detalles_saga' saga.id_saga %}">{{ saga.nombre }}</a>, #{{ libro.n_saga }}) - 
+                            {% endfor %}
+                        {% endif %}
+                    </h3>
+            
+                    <h3 class="autores">
+                        {% for autor in libro.id_autor.all %}
+                            <a href="{% url 'ver_detalles_autor' autor.id_autor %}">{{ autor.nombre_autor }} {{ autor.apellido_autor }}</a>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </h3>
+                </div>
             </div>
             <hr class="separador_detalles_libro">
             <div class="row  px-5">
-                DATOS, SINOPSIS ETC
+                <div class="col detalles_libro">
+                    <div class="row">
+                        <p class="sinopsis_libro">{{libro.sinopsis}}</p>
+                    </div>
+                    <div class="row">
+                        <h5><strong>Género:&nbsp;</strong>
+                        
+                            {% if libro.id_genero.exists %}
+                                {% for genero in libro.id_genero.all %}
+                                    {{ genero.nombre }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </h5>
+                    </div>
+                    <div class="row">
+                        <h5><strong>Fecha de publicación:&nbsp;</strong>
+                            {{libro.fecha_publicacion}}
+                        </h5>
+                    </div>
+                    <div class="row">
+                        <h5><strong>ISBN:&nbsp;</strong>
+                            {{libro.isbn}}
+                        </h5>
+                    </div>
+                    <div class="row">
+                        <h5> {{libro.n_paginas}}<strong>&nbsp;páginas</strong>
+                        </h5>
+                    </div>
+                </div>
             </div>
+            <hr class="separador_detalles_libro">
             <div class="row  px-5">
                 RESEÑAS
             </div>
@@ -61,25 +117,24 @@
     </div>
 </div>
 
-<!-- <div class="row">
-    <div class="col">
-        
+    <script>
+        const actualizarEstadoLibroUrl = "{% url 'actualizar_estado_libro' %}";
+        const libroId = "{{ libro.id_libro }}";
+        const estadoActual = "{{ estado_actual }}";
 
-    <div class="col">
-        
-    </div>
-    </div>
+        const estadoText = {
+            'n': '¿Te interesa el libro?',
+            'q': 'Lo quiero leer',
+            'ly': 'Lo estoy leyendo',
+            'l': 'Lo he leído',
+            'a': 'Lo he abandonado'
+        };
 
-
-    <div class="row">
-
-    </div>
-    <div class="row">
-
-    </div>
-</div> -->
-
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('dropdownBtn').textContent = estadoText[estadoActual] || estadoText['n'];
+        });
+    </script>
     <script src="{% static 'js/script_detalles_libro.js' %}"></script>
-
+    
 
 {% endblock %}

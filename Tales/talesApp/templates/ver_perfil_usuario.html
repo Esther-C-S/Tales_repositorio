@@ -1,5 +1,7 @@
 {% extends 'base/base.html' %}
 
+{% load static %}
+
 {% block title %}
     {{ titulo }}
 {% endblock %}
@@ -7,25 +9,30 @@
 {% block content %}
     
 <div class="container-fluid h-100 d-flex flex-column">
-    <div class="row flex-grow-1 p-5">
+    <div class="row flex-grow-1 p-5 mx-5">
         <div class="col-md-9">
             <div class="row h-100">
-                <div class="col-md-3">
-                    <img src="{{ usuario.foto_perfil.url}}" class="rounded-circle foto_perfil_usuario"  alt="Avatar" />
+                <div class="col-md-3 d-flex justify-content-center align-items-center">
+                    {% if usuario.foto_perfil %}
+                        <img src="{{ usuario.foto_perfil.url }}" class="rounded-circle foto_perfil_usuario" alt="Avatar" />
+                    {% else %}
+                        <img src="{% static 'img/foto_perfil_vacia/foto_perfil_vacia.webp' %}" class="rounded-circle foto_perfil_usuario" alt="Avatar" />
+                    {% endif %}
                 </div>
                 <div class="col-md-3">
                     <h1><strong>{{usuario.nombre_usuario}}</strong></h1>
                     <p>{{usuario.biografia}}</p>
                 </div>
             </div>
+            <hr class="separador_perfil_usuario">
             <div class="row h-100">
-                <hr class="separador">
+                
                 <div class="col">
                     <h2>Tus libros favoritos</h2>
                 </div>
             </div>
+            <hr class="separador_perfil_usuario">
             <div class="row h-100">
-                <hr class="separador">
                 <div class="col">
                     <h3>Estas leyendo...</h3>
                 </div>

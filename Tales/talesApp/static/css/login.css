@@ -37,7 +37,7 @@ body {
 
 .quote.slideUp {
   transform: translateY(-100%);
-  opacity: 0; /* Ocultar el div */
+  opacity: 0; 
 }
 
 .logo{
@@ -191,4 +191,26 @@ body {
 
 .registrar a:hover{
   color: #113946
+}
+
+@media (max-width: 500px) {
+  .quote {
+      display: none;
+      transition: transform 0s ease, opacity 0s ease;
+  }
+
+  body {
+      background-color: #EAD7BB !important;
+  }
+
+  #toggleBtn {
+      display: none;
+  }
+
+  .login-form {
+      text-align: center;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 0s ease;
+  }
 }
