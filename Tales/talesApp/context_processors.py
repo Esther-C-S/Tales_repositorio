@@ -9,3 +9,6 @@ def frase_aleatoria_login(request):
         frase = "oh oh, aqui deberia haber una frase"
 
     return {'frase' : frase }
+
+def usuario_autenticado(request):
+    return {'usuario_autenticado': request.user}

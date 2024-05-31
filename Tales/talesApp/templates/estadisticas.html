@@ -1,0 +1,301 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container my-4">
+    <div class="row text-center">
+        <h1>Estadisticas del {{año_actual}}</h1>
+    </div>
+    <div class="row mb-3 py-3">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Paginas</h5>
+                    <hr>
+                    <h2 style="text-align: center;"><strong>{{paginas}}</strong></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Autores</h5>
+                    <hr>
+                    <h2 style="text-align: center;"><strong>{{autores}}</strong></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Libros</h5>
+                    <hr>
+                    <h2 style="text-align: center;"><strong>{{libros}}</strong></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Sagas</h5>
+                    <hr>
+                    <h2 style="text-align: center;"><strong>{{sagas}}</strong></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><strong>A lo largo del {{año_actual}}</strong></h5>
+                    <div id="grafica" style="width:100%; height:250px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><strong>Generos mas leidos de {{año_actual}}</strong></h5>
+                    <div id="pie_chart" style="width:100%; height:250px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Medallas</h5>
+                    <div class="row">
+                        {% for categoria, tier in medallas_dict.items %}
+                            <div class="col">
+                                <div class="medalla">
+                                    {% if tier == 'x' %}
+                                        <h5>X</h5>
+                                    {% else %}
+                                        {% for medalla in todas_medallas %}
+                                            {% if medalla.categoria == categoria and medalla.tier == tier %}
+                                                <img src="{{ medalla.imagen.url }}" alt="{{ tier }}" style="max-width: 75px;" data-toggle="modal" data-bs-target="#modal{{ medalla.id_medalla }}">
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h5 style="float: left;">Retos</h5>
+                        <button style="float: right;" id="plusButton" class="mt-2 boton-reto rounded-circle" data-bs-toggle="modal" data-bs-target="#retoModal"><i class="bi bi-plus-lg"></i></button>
+                    </div>
+                    <div class="col">
+                        {% for reto in retos %}
+                            <div class="row align-items-center">
+                                <div class="col-10">
+                                    <h5>{{ reto.titulo_reto }}</h5>
+                                </div>
+                                <div class="col-2 text-right">
+                                    <form method="post" action="{% url 'completar_reto' reto.id_reto %}" class="mark-completed-form">
+                                        {% csrf_token %}
+                                        <input type="checkbox" name="completed" class="mark-completed-checkbox">
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Reto-->
+<div class="modal fade" id="retoModal" tabindex="-1" aria-labelledby="retoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="retoModalLabel">¿Qué reto quieres establecer?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="tituloReto">Título</label>
+                        <input type="text" class="form-control" id="tituloReto" placeholder="Título del reto">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="boton-modal" id="saveButton">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    libros_por_mes =  {{ libros_leidos_por_mes|safe }}
+    generos_data = {{ generos_data|safe }}
+    console.log(libros_por_mes);
+
+    Highcharts.chart('grafica', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: '',
+        align: 'left'
+    },
+    xAxis: {
+        categories: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        crosshair: true,
+        accessibility: {
+            description: 'Meses del año'
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: ''
+        }
+    },
+    tooltip: {
+        valueSuffix: ''
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [
+        {
+            name: 'Libros',
+            data: libros_por_mes,
+            color: '#638889' 
+        }
+    ],
+    legend: {
+        enabled: false
+    },
+    credits: {
+        enabled: false
+    }
+});
+
+function interpolateColor(color1, color2, factor) {
+    if (arguments.length < 3) {
+        factor = 0.5;
+    }
+    var result = color1.slice();
+    for (var i = 0; i < 3; i++) {
+        result[i] = Math.round(result[i] + factor * (color2[i] - result[i]));
+    }
+    return result;
+}
+
+// Función para convertir un color hex a RGB
+function hexToRgb(hex) {
+    var bigint = parseInt(hex.substring(1), 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+
+    return [r, g, b];
+}
+
+// Crear el gradiente de colores
+var startColor = hexToRgb("#9DBC98");
+var endColor = hexToRgb("#113946");
+var gradientColors = [];
+var steps = 10; // Número de colores en el gradiente
+
+for (var i = 0; i < steps; i++) {
+    var factor = i / (steps - 1);
+    var color = interpolateColor(startColor, endColor, factor);
+    gradientColors.push('rgb(' + color.join(',') + ')');
+}
+
+Highcharts.chart('pie_chart', {
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: ''
+    },
+    tooltip: {
+        pointFormat: 'Libros: <b>{point.y}</b><br/><b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            },
+            colors: gradientColors 
+        }
+    },
+    series: [{
+        name: 'Generos',
+        colorByPoint: true,
+        data: generos_data
+    }],
+    credits: {
+        enabled: false
+    }
+});
+
+$(document).ready(function(){
+    $('#saveButton').click(function(){
+        var titulo = $('#tituloReto').val();
+        var descripcion = $('#descripcionReto').val();
+
+        $.ajax({
+            url: "{% url 'crear_reto' %}",
+            type: 'POST',
+            data: {
+                titulo: titulo,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    location.reload(); // Recargar la página para mostrar los cambios
+                } else {
+                    console.error("Error", response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+});
+
+document.querySelectorAll('.mark-completed-checkbox').forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+        this.closest('form').submit();
+    });
+});
+
+</script>
+
+{% endblock %}

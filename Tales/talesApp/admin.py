@@ -123,3 +123,28 @@ class Estado_libroAdmin(admin.ModelAdmin):
     def titulo(self, obj):
         return obj.id_libro.titulo
     titulo.shory_description = "Titulo del Libro"
+
+
+@admin.register(Objetivo_lectura)
+class Objetivo_lectura(admin.ModelAdmin):
+    list_display = ('id_usuario', 'meta_libros', 'estado_actual')
+
+    def nombre_usuario(self, obj):
+        return obj.id_usuario.nombre_usuario
+    nombre_usuario.short_description = 'Nombre del Usuario'
+
+
+@admin.register(Sesion_lectura)
+class Sesion_lectura(admin.ModelAdmin):
+    list_display = ('id_sesion_lectura', 'id_usuario', 'fecha_sesion')
+
+    def nombre_usuario(self, obj):
+        return obj.id_usuario.nombre_usuario
+    nombre_usuario.short_description = 'Nombre del Usuario'
+
+@admin.register(Medalla)
+class MedallaAdmin(admin.ModelAdmin):
+    list_display = ('categoria', 'tier', 'imagen')
+@admin.register(UsuarioMedalla)
+class UsuarioMedallaAdmin(admin.ModelAdmin):
+    list_display = ('id_usuario', 'id_medalla', 'fecha_obtenida')

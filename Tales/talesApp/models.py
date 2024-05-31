@@ -90,6 +90,9 @@ class Usuario(models.Model):
     fecha_nacimiento = models.DateField()
     biografia = models.TextField()
     foto_perfil = models.ImageField(upload_to='fotos_perfil', null=True, blank=True)
+    fecha_creacion = models.DateField(auto_now_add=True, null=True, blank=True)
+    ciudad = models.CharField(max_length=20, null=True, blank=True)
+    sigue_a = models.ManyToManyField("self", symmetrical=False, blank=True)
 
     def __str__(self):
         return self.nombre_usuario
@@ -101,7 +104,7 @@ class Resenna(models.Model):
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     id_libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
     contenido = models.TextField()
-    valoracion = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    valoracion = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
 
 
 #modelo de la clase Retos
@@ -109,7 +112,15 @@ class Retos(models.Model):
     id_reto = models.AutoField(primary_key=True)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     titulo_reto = models.CharField(max_length=255)
-    descripcion_reto = models.TextField()
+    completado = models.BooleanField(default=False)
+
+
+#modelo de la clase ObjetivoLectura
+class Objetivo_lectura(models.Model):
+    id_reto = models.AutoField(primary_key=True)
+    id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    meta_libros = models.IntegerField()
+    estado_actual = models.IntegerField()
     completado = models.BooleanField(default=False)
 
 
@@ -117,9 +128,9 @@ class Retos(models.Model):
 class Libreria (models.Model):
     id_libreria = models.AutoField(primary_key=True)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    id_libro = models.ManyToManyField(Libro)
+    id_libro = models.ManyToManyField(Libro, blank=True)
     titulo = models.CharField(max_length=255)
-    n_libros_estanteria = models.IntegerField()
+    n_libros_estanteria = models.IntegerField(default=0)
 
 
 #modelo de la clase Estado_libro -> clase intermedia entre Usuario y Libro
@@ -155,3 +166,46 @@ class Estado_libro(models.Model):
 
     def __str__(self):
         return f"{self.id_libro.titulo} - {self.get_estado_display()}"
+    
+
+#modelo de Sesiones Lectura
+class Sesion_lectura(models.Model):
+    id_sesion_lectura = models.AutoField(primary_key=True)
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    paginas_leidas = models.IntegerField()
+    tiempo_sesion = models.IntegerField()
+    fecha_sesion = models.DateField(auto_now_add=True, null=True, blank=True)
+
+
+#modelo de las Medallas
+class Medalla(models.Model):
+    CATEGORIA_MEDALLA = (
+        ('paginas_dia', 'Leer X páginas al día'),
+        ('libros_mes', 'Leer X libros al mes'),
+        ('consistencia_semanal', 'Consistencia de lectura semanal'),
+        ('autores_diversos', 'Lectura de autores diversos'),
+        ('maraton_lectura', 'Maratón de lectura'),
+        ('series_trilogias', 'Completar series o trilogías'),
+    )
+
+    TIER = (
+        ('madera', 'Madera'),
+        ('hierro', 'Hierro'),
+        ('oro', 'Oro'),
+    )
+
+    id_medalla = models.AutoField(primary_key=True)
+    categoria = models.CharField(max_length=50, choices=CATEGORIA_MEDALLA)
+    tier = models.CharField(max_length=10, choices=TIER)
+    imagen = models.ImageField(upload_to='medallas')
+
+    def __str__(self):
+        return f'{self.get_categoria_display()} - {self.get_tier_display()}'
+
+class UsuarioMedalla(models.Model):
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    id_medalla = models.ForeignKey(Medalla, on_delete=models.CASCADE)
+    fecha_obtenida = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.id_usuario.nombre_usuario} - {self.id_medalla}'

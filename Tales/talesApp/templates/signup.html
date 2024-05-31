@@ -80,6 +80,17 @@
                         {% endif %}
                     </div>
                 </div>
+                <div class="col px-2">
+                    <div class="form-group">
+                        <label for="{{ form.fecha_nacimiento.id_for_label }}">Ciudad:</label>
+                        <div class="input-group">
+                            {{ form.ciudad }}
+                        </div>
+                        {% if form.ciudad.errors %}
+                            <div class="error">{{ form.ciudad.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
 
             <div class="row justify-content-center mb-3">

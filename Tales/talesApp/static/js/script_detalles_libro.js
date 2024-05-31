@@ -22,12 +22,11 @@ function setStatus(status) {
                 document.querySelector('.dropbtn').textContent = response.estado_text;
                 toggleDropdown();
             } else {
-                alert('Error al actualizar el estado');
+                console.error(error);
             }
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
-            alert('Error al actualizar el estado');
         }
     });
 }
@@ -44,7 +43,33 @@ window.onclick = function(event) {
     }
 }
 
+document.getElementById('resenaForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
+    const valoracion = document.getElementById('valoracion').value;
+    const opinion = document.getElementById('opinion').value;
+
+    $.ajax({
+        url: enviarReseña,
+        type: "POST",
+        data: {
+            valoracion: valoracion,
+            opinion: opinion,
+            id_libro: libroId,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+            if (response.success) {
+                location.reload();
+            } else {
+                alert('Error enviar la reseña');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+});
 
 window.onload = adjustButtonWidth;
 window.onresize = adjustButtonWidth;

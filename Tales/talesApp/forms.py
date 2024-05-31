@@ -27,6 +27,10 @@ class RegisterUserForm(UserCreationForm):
         widget=forms.Textarea(attrs={'placeholder': 'Biografía', 'class': 'form-control'}),
         required=False
     )
+    ciudad = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Ciudad', 'class': 'form-control'}),
+        required=False
+    )
     foto_perfil = forms.ImageField(
         required=False,
         widget=forms.ClearableFileInput(attrs={'class': 'form-control'})

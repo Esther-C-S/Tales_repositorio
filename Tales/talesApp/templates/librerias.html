@@ -1,0 +1,155 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container text-center">
+    <div class="row my-4">
+        <!-- Tarjetas grandes -->
+        {% for estanteria in estanterias %}
+            <div class="col-md-4">
+                <a href="{% url 'ver_detalles_libreria' estanteria.id_libreria %}">
+                    <div class="card big-card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ estanteria.titulo }}</h5>
+                            <div class="row {% if estanteria.portadas|length == 1 %}justify-content-center{% endif %}">
+                                {% if estanteria.n_libros_estanteria == 0 %}
+                                    <p class="text-center">¡Vaya parece que todavía no tienes libros aquí!</p>
+                                {% else %}
+                                    {% for libro in estanteria.portadas %}
+                                        {% if forloop.counter == 1 %}
+                                            <div class="col-8 d-flex align-items-center">
+                                                <img src="{{ libro.portada.url }}" alt="Portada libro grande" class="img-fluid large">
+                                            </div>
+                                        {% elif forloop.counter == 2 %}
+                                            <div class="col-4 d-flex flex-column">
+                                                <img src="{{ libro.portada.url }}" alt="Portada libro pequeño" class="img-fluid small mb-2">
+                                        {% elif forloop.counter == 3 %}
+                                                <img src="{{ libro.portada.url }}" alt="Portada libro pequeño" class="img-fluid small mb-2">
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <p class="card-text">{{ estanteria.n_libros_estanteria }} libros</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    <hr>
+    <div class="row my-5 d-flex text-center align-items-center justify-content-center">
+        <!-- Tarjeta Abandonados -->
+        <div class="col-md-4">
+            <a href="{% url 'ver_detalles_libreria' abandonados.id_libreria %}">
+                <div class="card small-card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                {% if abandonados.n_libros_estanteria == 0 %}
+                                    <p class="text-center">¡Vaya parece que todavía no tienes libros aquí!</p>
+                                {% else %}
+                                    <img src="{{ abandonados.portadas.0.portada.url }}" alt="Portada libro grande" class="img-fluid large" style="max-width: 150px;">
+                                {% endif %}
+                            </div>
+                            <div class="col-6 d-flex flex-column justify-content-center">
+                                <h5 class="card-title">{{ abandonados.titulo }}</h5>
+                                <p class="card-text">{{ abandonados.n_libros_estanteria }} libros</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% for libreria in librerias_personalizadas %}
+            <div class="col-md-4">
+                <a href="{% url 'ver_detalles_libreria' libreria.id_libreria %}">
+                    <div class="card small-card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    {% if libreria.n_libros_estanteria == 0 %}
+                                        <p class="text-center">¡Vaya parece que todavía no tienes libros aquí!</p>
+                                    {% else %}
+                                        <img src="{{ libreria.portadas.0.portada.url }}" alt="Portada libro grande" class="img-fluid large" style="max-width: 150px;">
+                                    {% endif %}
+                                </div>
+                                <div class="col-6 d-flex flex-column justify-content-center">
+                                    <h5 class="card-title">{{ libreria.titulo }}</h5>
+                                    <p class="card-text">{{ libreria.n_libros_estanteria }} libros</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>    
+            </div>
+        {% endfor %}
+        <div class="col-md-4">
+            <div class="card small-card">
+                <div class="card-body">
+                    <div class="row-auto">
+                        <div class="col-auto d-flex flex-column justify-content-center align-items-center">
+                            <h5 class="card-title">¿Quieres crear otra libreria?</h5>
+                            <button class="boton-libreria" data-bs-toggle="modal" data-bs-target="#exampleModal">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">¿Que nombre le quieres dar a la nueva libreria?</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" style="width: 100%;" id="nombre_libreria">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="boton-modal" id="guardar">Save changes</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script>
+    const guardar = document.getElementById('guardar');
+    const nombre = document.getElementById('nombre_libreria');
+
+    guardar.addEventListener('click', function() {
+        const titulo = nombre.value;
+
+        $.ajax({
+            url: "{% url 'crear_libreria' %}",
+            type: "POST",
+            data: {
+                titulo : titulo,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    location.reload(); // Recargar la página para mostrar los cambios
+                } else {
+                    console.error("Error", response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+
+    })
+</script>
+
+{% endblock %}

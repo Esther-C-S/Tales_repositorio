@@ -9,29 +9,30 @@
 <div class="container busqueda">
     <div class="row">
         <div class="col-12 col-md-12 pt-5 d-flex justify-content-center">
-            <div class="row d-flex align-items-center">
-                <div class="d-flex align-items-end">
-                    <h1 class="mr-2">{{saga.nombre}} - </h1>
-                    {% for autor in saga.id_autor.all %}
-                        <h3 class="autores ml-2"><a href="{% url 'ver_detalles_autor' autor.id_autor %}"> {{autor.nombre_autor}} {{autor.apellido_autor}}</a></h3>
-                    {% endfor %}
+                <div class="row d-flex align-items-end">
+                    <h1>{{libreria.titulo}} 
+                        {% if libreria.n_libros_estanteria == 0 %}
+                        
+                        {% elif libreria.n_libros_estanteria == 1 %}
+                            - {{libreria.n_libros_estanteria}} libro
+                        {% else %}
+                            - {{libreria.n_libros_estanteria}} libros
+                        {% endif %}
+                    </h1>
                 </div>
-            </div>
         </div>
     </div>
     <div class="row justify-content-start px-5 w-100">
         <div class="col-12 justify-content-center w-100 no-margin">
+            {% if libros%}
                 {% for libro in libros %}
                     <div class="resultado">
                         <hr class="separador">
                         <div class="row">
-                            <div class="col-1 d-flex align-items-center justify-content-end pl-2">
-                                <h2>{{libro.n_saga}}</h2>
-                            </div>
                             <div class="col-3 d-flex justify-content-center align-items-center">
-                                <img src="{{ libro.portada.url }}" alt="Portada de {{ resultado.titulo }}" style="width: 100px;">
+                                <img src="{{ libro.portada.url }}" alt="Portada de {{ libro.titulo }}" style="width: 100px;">
                             </div>
-                            <div class="col-8">
+                            <div class="col-9">
                                 <p class="titulo">{{ libro.titulo }}</p>
                                 <p>
                                     <span class="autores">
@@ -52,6 +53,11 @@
                         </div>
                     </div>
                 {% endfor %}
+            {% else %}
+            <div class="row text-center py-5">
+                <h5>¡Vaya! Parece que no tienes libros!</h5>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

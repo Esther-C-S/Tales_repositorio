@@ -30,18 +30,78 @@
             <div class="col">
                 <div class="row">
                     <div class="col d-flex justify-content-center">
-                        <button class="mt-2 boton-actualizar"><i class="bi bi-play-fill"></i></button>
+                        <button id="plusButton" class="mt-2 boton_timer" data-bs-toggle="modal" data-bs-target="#startModal"><i class="bi bi-plus-lg"></i></button>
                     </div>
                     <div class="col d-flex justify-content-center">
-                        <button class="mt-2 boton-actualizar"><i class="bi bi-pause"></i></button>
+                        <button id="pauseResumeButton" class="mt-2 boton_timer"><i class="bi bi-pause"></i></button>
                     </div>
                     <div class="col d-flex justify-content-center">
-                        <button class="mt-2 boton-actualizar"><i class="bi bi-square-fill"></i></button>
+                        <button id="stopButton" class="mt-2 boton_timer" data-bs-toggle="modal" data-bs-target="#pagesReadModal" disabled><i class="bi bi-square-fill"></i></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Play modal -->
+<div class="modal fade" id="startModal" tabindex="-1" aria-labelledby="timerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="timerModalLabel">¿Cuánto quieres leer?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3">
+            <div class="col-4">
+              <label for="hours" class="visually-hidden">Horas</label>
+              <input type="number" class="form-control" id="hours" placeholder="h" min="0">
+            </div>
+            <div class="col-4">
+              <label for="minutes" class="visually-hidden">Minutos</label>
+              <input type="number" class="form-control" id="minutes" placeholder="min" min="0" max="59">
+            </div>
+            <div class="col-4">
+              <label for="seconds" class="visually-hidden">Segundos</label>
+              <input type="number" class="form-control" id="seconds" placeholder="s" min="0" max="59">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="boton-modal" id="startTimer">Iniciar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Pages Read modal -->
+<div class="modal fade" id="pagesReadModal" tabindex="-1" aria-labelledby="pagesReadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="pagesReadModalLabel">¿Cuántas páginas has leído?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="pagesRead" class="form-label">Páginas leídas</label>
+              <input type="number" class="form-control" id="pagesRead" min="0">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="boton-modal" id="savePagesRead">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const csrfToken = '{{ csrf_token }}';
+    const url = "{% url 'crear_sesion_lectura' %}"
+  </script>
+
 <script src="{% static 'js/leyendo.js' %}"></script>
 {% endblock %}

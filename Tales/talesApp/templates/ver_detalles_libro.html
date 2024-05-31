@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% load static %}
+{% load custom_tags %}
 
 {% block title %}
     {{ titulo }}
@@ -27,14 +28,30 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#libreriaModal">
+                    <p>+ Añadir a una librería</p>
+                </a>
+            </div>
             <div class="row my-4">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-half"></i>
-                </div>
+                {% if valoracion_usuario %}
+                    <div class="d-flex align-items-center justify-content-center">
+                        <!-- Generar estrellas llenas -->
+                        {% for i in valoracion_usuario|range_filter %}
+                            <i class="bi bi-star-fill"></i>
+                        {% endfor %}
+                        <!-- Generar estrellas vacías si la valoración es menor que 5 -->
+                        {% with 5|subtract:valoracion_usuario as empty_stars %}
+                            {% for i in empty_stars|range_filter %}
+                                <i class="bi bi-star"></i>
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center">
+                        <p>No has valorado este libro aún.</p>
+                    </div>
+                {% endif %}
             </div>
             <div class="row justify-content-center">
                 {% if estado_libro.fecha_leyendo %}
@@ -51,6 +68,13 @@
                     </div>
                     <div class="col-12">
                         <h5>{{ estado_libro.fecha_leido|date:"d/m/Y H:i" }}</h5>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="row justify-content-center">
+                {% if estado_libro.estado == 'l' %}
+                    <div class="col-12 py-2">
+                        <button class="boton_reseña" data-bs-toggle="modal" data-bs-target="#escribirResenaModal"><i class="bi bi-pencil-fill"></i> Escribir reseña</button>
                     </div>
                 {% endif %}
             </div>
@@ -111,14 +135,111 @@
             </div>
             <hr class="separador_detalles_libro">
             <div class="row  px-5">
-                RESEÑAS
+                <div class="col">
+                    {% for reseña in reseñas %}
+                    <div class="row mb-3">
+                        <div class="col-1">
+                            <a href="{% url 'ver_perfil_usuario' reseña.id_usuario.id_usuario %}">
+                                {% if reseña.id_usuario.foto_perfil %}
+                                    <img id="foto_perfil" class="img-fluid img-thumbnail rounded-circle" src="{{ reseña.id_usuario.foto_perfil.url }}" alt="Foto de {{ reseña.id_usuario.nombre_usuario }}">
+                                {% else %}
+                                    <img src="{% static 'img/foto_perfil_vacia/foto_perfil_vacia.webp' %}" id="foto_perfil" class="img-fluid img-thumbnail rounded-circle" alt="Avatar" />
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            <div class="d-flex align-items-center">
+                                <a href="{% url 'ver_perfil_usuario' reseña.id_usuario.id_usuario %}">
+                                    <h5 class="mb-0">{{ reseña.id_usuario.nombre_usuario }}</h5>
+                                </a>
+                                <div class="ms-2 d-flex align-items-center">
+                                    <!-- Generar estrellas llenas -->
+                                    {% for i in reseña.valoracion|range_filter %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% endfor %}
+                                    <!-- Generar estrellas vacías si la valoración es menor que 5 -->
+                                    {% with 5|subtract:reseña.valoracion as empty_stars %}
+                                        {% for i in empty_stars|range_filter %}
+                                            <i class="bi bi-star"></i>
+                                        {% endfor %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                            <p>{{ reseña.contenido }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>No hay reseñas para este libro aún.</p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+
+<!-- Modal Reseña -->
+<div class="modal fade" id="escribirResenaModal" tabindex="-1" aria-labelledby="escribirResenaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="escribirResenaModalLabel">Escribir reseña</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="resenaForm">
+            <div class="mb-3">
+                <label for="valoracion" class="form-label">Valoración</label>
+                <select class="form-select" id="valoracion" name="valoracion" required>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+            </div>
+            <div class="mb-3">
+              <label for="opinion" class="form-label">Di tu opinión sobre el libro</label>
+              <textarea class="form-control" id="opinion" name="opinion" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="boton-modal">Enviar reseña</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="libreriaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Seleccionar Librería</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="librerias-list" class="list-group">
+                        {% for libreria in librerias %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ libreria.titulo }}
+                            <input type="checkbox" class="form-check-input" {% if libro in libreria.libros.all %} checked {% endif %} 
+                                data-libreria-id="{{ libreria.id_libreria }}" data-libro-id="{{ libro.id_libro }}">
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="boton-modal" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         const actualizarEstadoLibroUrl = "{% url 'actualizar_estado_libro' %}";
+        const enviarReseña = "{% url 'enviar_resenna' %}";
+
         const libroId = "{{ libro.id_libro }}";
         const estadoActual = "{{ estado_actual }}";
 
@@ -132,6 +253,36 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('dropdownBtn').textContent = estadoText[estadoActual] || estadoText['n'];
+
+            document.querySelectorAll('#librerias-list input[type="checkbox"]').forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    var id_libreria = this.getAttribute('data-libreria-id');
+                    var id_libro = this.getAttribute('data-libro-id');
+                    var añadir = this.checked;
+
+                    $.ajax({
+                        url: "{% url 'editar_libreria' %}",
+                        type: "POST",
+                        data: {
+                            id_libro: id_libro,
+                            id_libreria : id_libreria,
+                            añadir: añadir,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                location.reload(); // Recargar la página para mostrar los cambios
+                            } else {
+                                console.error("Error", response.error);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                });
+            });
+
         });
     </script>
     <script src="{% static 'js/script_detalles_libro.js' %}"></script>
