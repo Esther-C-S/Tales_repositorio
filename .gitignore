@@ -120,7 +120,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
@@ -161,6 +160,3 @@ cython_debug/
 
 # Text backup files
 *.bak
-
-# Database
-*.sqlite3
