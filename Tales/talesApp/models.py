@@ -18,7 +18,6 @@ class Libro(models.Model):
     isbn = models.CharField(max_length=13)
     fecha_publicacion = models.DateField()
     sinopsis = models.TextField()
-    valoracion_media = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     portada = models.ImageField(upload_to='portadas_libro')
 
     def __str__(self):
